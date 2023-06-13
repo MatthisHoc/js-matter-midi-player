@@ -1,0 +1,24 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    display: flex;
+
+    background-color: #1d1b1f;
+
+    /* Center sketch horizontally */
+    justify-content: center;
+
+    /* Center sketch vertically */
+    align-items: center;
+}
+
+#filepicker
+{
+    background-color: #f3edf5;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
