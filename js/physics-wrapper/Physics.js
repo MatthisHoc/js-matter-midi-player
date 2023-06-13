@@ -5,6 +5,10 @@ var Runner = Matter.Runner;
 var Composite = Matter.Composite;
 var Events = Matter.Events;
 
+/** 
+ * The Physics singleton object handles the Matter engine and the world Composite
+ * Any PhysicsObject must be explicitly added to the world by calling Physics.get().add()
+ */
 class Physics
 {
     #engine;
@@ -19,6 +23,7 @@ class Physics
     {
         this.#engine = Engine.create();
         this.#runner = Runner.create();
+        Physics.#instance = this;
         Runner.start(this.#runner, this.#engine);
 
         Events.on(this.#engine, "collisionStart", this.collisionOccured)
@@ -29,7 +34,7 @@ class Physics
     {
         if (!Physics.#instance)
         {
-            Physics.#instance = new Physics();
+            new Physics();
         }
 
         return Physics.#instance;
