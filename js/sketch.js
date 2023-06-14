@@ -2,7 +2,7 @@ function setup()
 {
     createCanvas(windowWidth * 0.8, windowHeight * 0.8);
     
-    var player = new MusicPlayer(2);
+    var player = new MusicPlayer(1);
 }
 
 function mousePressed()

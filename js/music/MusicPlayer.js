@@ -58,12 +58,13 @@ class MusicPlayer
             if (track.length === 0) continue;
 
             // While we find midi events that should be played, play them and remove them from the queue
-            while(true)
+            while(track[0] !== undefined)
             {
                 if (evt.timestamp / 1000 >= track[0].time)
                 {
                     var midiEvent = track.shift();
                     this.spawnBall(this.transposeNote(midiEvent.name), midiEvent.velocity);
+
                 }
                 else
                 {
@@ -146,10 +147,13 @@ class MusicPlayer
         }
 
         // No tile found
-        if (tile === undefined) return;
+        if (tile === undefined) 
+        {
+            console.log("No tile found for note " + noteLabel);
+            return;
+        }
 
-        // spawn ball at the top 10% portion of the canvas
-        const y = height * 0.1;
+        const y = 0;
         // spawn a ball at the tile's x position up in the air
         var ball = new Ball(tile.getRigidBody().position.x, y, velocity);
         Physics.get().add(ball);
@@ -212,14 +216,6 @@ class MusicPlayer
             }
         }
     
-        notes = notes.sort(compareNotes);
-    
-        // A quick extra step to replace any '#' with a 'S' to match our internal notation
-        for(var i = 0; i < notes.length; ++i)
-        {
-            notes[i] = notes[i].replace('#', 'S');
-        }
-    
-        return notes;
+        return notes.sort(compareNotes);
     }
 }

@@ -16,8 +16,17 @@ class NoteLoader
     {
         for(var i = 0; i < this.#noteLabels.length; ++i)
         {
+            var label = this.#noteLabels[i];
+            
+            // If note label is a sharp note, we want to replace the # symbol with a S just for loading the file
+            // this is because # is a forbidden symbol for file names
+            if (label.length === 3)
+            {
+                label = label.replace('#', 'S');
+            }
+
             this.#notes.push(
-                new Note( new Audio(`../glockenspiel-audio/${this.#noteLabels[i]}.wav`), this.#noteLabels[i] )
+                new Note( new Audio(`../glockenspiel-audio/${label}.wav`), this.#noteLabels[i] )
                 );
         }
     }
@@ -53,6 +62,11 @@ class Note
         this.label = label;
     }
 
+    static formatLabel(label)
+    {
+
+    }
+
     static getOctave(noteLabel)
     {
         return Math.floor(noteLabel.slice(-1));
@@ -65,7 +79,7 @@ class Note
 
     static getPitch(noteLabel)
     {
-        return note.slice(0, 1);
+        return noteLabel.slice(0, 1);
     }
 
     getPitch()
