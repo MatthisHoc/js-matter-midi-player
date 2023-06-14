@@ -28,6 +28,12 @@ class NoteLoader
         return this.#notes[index];
     }
 
+    getNoteLabel(label)
+    {
+        var index = this.#noteLabels.findIndex(elem => elem == label);
+        return this.#notes[index];
+    }
+
     numNotes()
     {
         return this.#noteLabels.length;
@@ -57,8 +63,18 @@ class Note
         return Note.getOctave(this.label);
     }
 
+    static getPitch(noteLabel)
+    {
+        return note.slice(0, 1);
+    }
+
+    getPitch()
+    {
+        return Note.getPitch(this.label);
+    }
+
     // Given a note label, returns this same label with the octave replaced by newOctave
-    static setOctave(noteLabel, newOctave)
+    static changeOctave(noteLabel, newOctave)
     {
         return noteLabel.slice(0, -1) + newOctave;
     }
