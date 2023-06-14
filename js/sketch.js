@@ -1,13 +1,15 @@
 function setup()
 {
     createCanvas(windowWidth * 0.8, windowHeight * 0.8);
-    
-    var player = new MusicPlayer(1);
+    colorMode(HSL);
+
+    Animator.init();
+    var player = new MusicPlayer(2);
 }
 
 function mousePressed()
 {
-    var ball = new Ball(mouseX, mouseY, 0.5);
+    var ball = new Ball(mouseX, mouseY, 1, [270, 85, 95]);
     Physics.get().add(ball);
 }
 
@@ -30,7 +32,7 @@ function draw()
         for (var i = 0; i < rigidBody.vertices.length; ++i)
         {
             var bodyVert = rigidBody.vertices[i];
-            vertex(bodyVert.x, bodyVert.y);
+            vertex(bodyVert.x + physObject.drawOffset.x, bodyVert.y + physObject.drawOffset.y);
         }
         endShape(CLOSE);
 

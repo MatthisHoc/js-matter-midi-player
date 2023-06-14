@@ -3,6 +3,10 @@
  */
 class MusicPlayer
 {
+    // Color range used when spawing the balls in HSL format
+    static minColor = [270, 67, 55]; // purple
+    static maxColor = [0, 67, 55]; // red
+
     #midiData = testMidi;
     #noteLoader;
 
@@ -153,9 +157,15 @@ class MusicPlayer
             return;
         }
 
-        const y = 0;
+        // Lerp colors to get a custom color based on the tile
+        var pct = i / this.#musicTiles.length;
+        var h = Animator.lerp(MusicPlayer.minColor[0], MusicPlayer.maxColor[0], pct);
+        var s = Animator.lerp(MusicPlayer.minColor[1], MusicPlayer.maxColor[1], pct);
+        var b = Animator.lerp(MusicPlayer.minColor[2], MusicPlayer.maxColor[2], pct);
+
+        const y = -50;
         // spawn a ball at the tile's x position up in the air
-        var ball = new Ball(tile.getRigidBody().position.x, y, velocity);
+        var ball = new Ball(tile.getRigidBody().position.x, y, velocity, [h, s, b]);
         Physics.get().add(ball);
     }
 
