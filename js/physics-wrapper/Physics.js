@@ -52,11 +52,24 @@ class Physics
 
     remove(physicsObject)
     {
-        var i = this.findPhysicsObjectIndexFromId(physicsObject.getRigidBody().id);
+        var id = physicsObject.getRigidBody().id;
+        var i = this.findPhysicsObjectIndexFromId(id);
         if (i > 0)
         {
             this.#physicsObjects.splice(i, 1);
             Composite.remove(this.#engine.world, physicsObject.getRigidBody());
+        }
+
+        // Also remove from event listeners
+        for (var i = 0; i < this.#collisionEventListeners.length; ++i)
+        {
+            var listener = this.#collisionEventListeners[i];
+
+            if (listener.id == id)
+            {
+                this.#collisionEventListeners.splice(i, 1);
+                break;
+            }
         }
     }
 
@@ -118,26 +131,28 @@ class Physics
         });
     }
 
-    broadcastCollisionEvent(physicsObjectA, physicsObjectB)
+    broadcastCollisionEvent(poA, poB)
     {
-        // Because our collisionEventListeners object stores an id and the callback
-        // we need to explicitely pass the listener's PhysicsObject as well in the right order. 1. Listener, 2. Other object
-        this.#collisionEventListeners.forEach(listener => {
-            if (listener.id === physicsObjectA.getRigidBody().id)
+        for(var listener of this.#collisionEventListeners)
+        {
+            if (poA && listener.id === poA.getRigidBody().id)
             {
-                listener.callback(physicsObjectA, physicsObjectB);
+                listener.callback(poB);
+                continue;
             }
-            else if (listener.id === physicsObjectB.getRigidBody().id)
+            
+            if (poB && listener.id === poB.getRigidBody().id)
             {
-                listener.callback(physicsObjectB, physicsObjectA);
+                listener.callback(poA);
+                continue;
             }
-        });
+        }
     }
 
     // A simple one use-case event system for collision listening
     listenToCollisionEvent(physicsObject, callback)
     {
         var poId = physicsObject.getRigidBody().id;
-        this.#collisionEventListeners.push({"id": poId, "callback": callback});
+        this.#collisionEventListeners.push({"id": poId, "callback": callback.bind(physicsObject)});
     }
 }

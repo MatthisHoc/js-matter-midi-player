@@ -1,9 +1,52 @@
 var Sleeping = Matter.Sleeping;
+var Bodies = Matter.Bodies;
+
+class PhysicsObject
+{
+    #rigidBody;
+
+    // Quicker access to these options
+    fillColor = 255;
+    hasOutline = true;
+    outlineColor = 0;
+
+    constructor(rigidBody, options = null)
+    {
+        this.#rigidBody = rigidBody;
+
+        if (options == null) return;
+
+        if (options.fillColor !== undefined)
+        {
+            this.fillColor = options.fillColor;
+        }
+
+        if (options.hasOutline !== undefined)
+        {
+            this.hasOutline = options.hasOutline;
+        }
+
+        if (options.outlineColor !== undefined)
+        {
+            this.outlineColor = options.outlineColor;
+        }
+    }
+
+    getRigidBody()
+    {
+        return this.#rigidBody;
+    }
+
+    destroy()
+    {
+        Physics.get().remove(this);
+    }
+}
 
 /**
  * A static PhysicsObject that holds a Note and plays it whenever it collides with a Ball
  */
-class MusicTile extends Rectangle
+class MusicTile extends PhysicsObject
 {
     static NUM_TILES = 15;
     static TILE_SPACING = 5;
@@ -26,7 +69,7 @@ class MusicTile extends Rectangle
         // Hard-coded Y value that places the tile at 90% on the bottom of the canvas
         const y = height * 0.9;
 
-        super(x, y, tileWidth, MusicTile.height, MusicTile.options)
+        super(Bodies.rectangle(x, y, tileWidth, MusicTile.height, MusicTile.options), MusicTile.options);
 
         // Add an event listener so we know when to play a sound
         Physics.get().listenToCollisionEvent(this, this.collisionOccured);
@@ -35,12 +78,12 @@ class MusicTile extends Rectangle
         this.note = noteLoader.getNote(index);
     }
 
-    collisionOccured(thisPhysObject, otherPhysObject)
+    collisionOccured(otherPhysObject)
     {
         // Make sure we are hit by a ball and signal it has hit a MusicTile
-        if (otherPhysObject.constructor.name === "Ball")
+        if (otherPhysObject && otherPhysObject.constructor.name === "Ball")
         {
-            thisPhysObject.note.play(otherPhysObject.noteVelocity);
+            this.note.play(otherPhysObject.noteVelocity);
             otherPhysObject.hitMusicTile();
         }
     }
@@ -50,7 +93,7 @@ class MusicTile extends Rectangle
  * The PhysicsObject we drop on MusicTiles. It contains velocity information to determine how strongly it will hit the tiles
  * A Ball could really be any PhysicsObject as the MusicTile use collision detection to play sounds
 */
-class Ball extends Circle
+class Ball extends PhysicsObject
 {
     static options = {
         fillColor: "#4287f5",
@@ -73,7 +116,7 @@ class Ball extends Circle
         // Determine radius with a simple linear function
         var radius = a * noteVelocity + minSize;
         
-        super(x, y, radius, Ball.options);
+        super(new Bodies.circle(x, y, radius, Ball.options), Ball.options);
 
         this.noteVelocity = noteVelocity;
     }
@@ -82,9 +125,8 @@ class Ball extends Circle
     hitMusicTile()
     {
         // Destroy ball
-        this.fillColor = "#32a852";
-        this.getRigidBody().collisionFilter = {group: -1, category: 2, mask: 0}
-        Sleeping.set(this.getRigidBody(), true);
+        //this.getRigidBody().collisionFilter = {group: -1, category: 2, mask: 0}
+        //Sleeping.set(this.getRigidBody(), true);
         this.destroy();
     }
 }
