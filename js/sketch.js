@@ -1,41 +1,49 @@
-function setup()
-{
-    createCanvas(windowWidth * 0.8, windowHeight * 0.8);
-    colorMode(HSL);
+import MusicPlayer from './music/MusicPlayer.js';
+import Physics from './physics-wrapper/Physics.js';
+import Animator from './music/Animator.js';
 
-    Animator.init();
-    var player = new MusicPlayer(2);
-}
-
-function mousePressed()
+new p5(function(p5)
 {
-    var ball = new Ball(mouseX, mouseY, 1, [270, 85, 95]);
-    Physics.get().add(ball);
-}
-
-function draw()
-{
-    background("#f3edf5");
-    
-    // Draw all bodies in the world composite
-    Physics.get().getAllPhysicsObjects().forEach(physObject => 
+    p5.setup = function()
     {
-        rigidBody = physObject.getRigidBody();
-        // Start a new style that matches the body's style
-        push();
-        fill(physObject.fillColor);
-        if (!physObject.hasOutline) noStroke();
-        stroke(physObject.outlineColor);
+        p5.createCanvas(p5.windowWidth * 0.8, p5.windowHeight * 0.8);
+        p5.colorMode(p5.HSL);
+    
+        Animator.init();
+        var player = new MusicPlayer(2, p5.width, p5.height);
+    }
 
-        // Do a vertex fill draw with P5
-        beginShape();
-        for (var i = 0; i < rigidBody.vertices.length; ++i)
+    p5.draw = function()
+    {
+        p5.background("#f3edf5");
+        
+        // Draw all bodies in the world composite
+        Physics.get().getAllPhysicsObjects().forEach(physObject => 
         {
-            var bodyVert = rigidBody.vertices[i];
-            vertex(bodyVert.x + physObject.drawOffset.x, bodyVert.y + physObject.drawOffset.y);
-        }
-        endShape(CLOSE);
+            var rigidBody = physObject.getRigidBody();
+            // Start a new style that matches the body's style
+            p5.push();
+            p5.fill(physObject.fillColor);
+            if (!physObject.hasOutline) p5.noStroke();
+            p5.stroke(physObject.outlineColor);
+    
+            // Do a vertex fill draw with P5
+            p5.beginShape();
+            for (var i = 0; i < rigidBody.vertices.length; ++i)
+            {
+                var bodyVert = rigidBody.vertices[i];
+                p5.vertex(bodyVert.x + physObject.drawOffset.x, bodyVert.y + physObject.drawOffset.y);
+            }
+            p5.endShape(p5.CLOSE);
+    
+            p5.pop();
+        });
+    }
+    
+});
 
-        pop();
-    });
-}
+//function mousePressed()
+//{
+//    var ball = new Ball(mouseX, mouseY, 1, [270, 85, 95]);
+//    Physics.get().add(ball);
+//}

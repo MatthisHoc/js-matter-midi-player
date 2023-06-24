@@ -1,5 +1,6 @@
 // MIDI class that uses midi-parser.js to read to content of a midi file and covert it to a human-readable JS object
 // ! Not complete
+/*
 class Midi
 {
     header = {};
@@ -21,10 +22,10 @@ class Midi
 
         readyCallback(midi);
     }
-}
+}*/
 
 // Obtained here: https://www.visipiano.com/midi-to-json-converter/
-const testMidi = {
+export const testMidi = {
   "header": {
     "PPQ": 1024,
     "timeSignature": [

@@ -1,7 +1,9 @@
+import Physics from '../physics-wrapper/Physics.js';
+
 var Events = Matter.Events;
 
 // An object that updates itself and linearly interpolate from a start object to an end object
-class Animator
+export default class Animator
 {
     static #animators = []
     

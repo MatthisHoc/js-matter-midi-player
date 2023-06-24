@@ -1,7 +1,15 @@
+import { Ball, MusicTile } from './MusicPlayerObjects.js';
+import { NoteLoader, Note } from './Notes.js';
+import { testMidi } from './Midi.js';
+import Physics from '../physics-wrapper/Physics.js';
+import Animator from './Animator.js';
+
+var Events = Matter.Events;
+
 /** 
  * Initialize the Physics world from a midi file and handles timing features to play the song
  */
-class MusicPlayer
+export default class MusicPlayer
 {
     // Color range used when spawing the balls in HSL format
     static minColor = [270, 67, 55]; // purple
@@ -20,7 +28,7 @@ class MusicPlayer
     // Filled once in "getAllNotes()" and emptied progressively when updating
     #midiEventsQueue = [];
 
-    constructor(transpose)
+    constructor(transpose, canvasWidth, canvasHeight)
     {
         // Get all notes from the midi date
         var notes = this.getAllNotesAndFillQueue();
@@ -41,7 +49,7 @@ class MusicPlayer
         MusicTile.NUM_TILES = this.#noteLoader.numNotes();
         for (var i = 0; i < MusicTile.NUM_TILES; ++i)
         {
-            var tile = new MusicTile(i, this.#noteLoader);
+            var tile = new MusicTile(i, this.#noteLoader, canvasWidth, canvasHeight);
             
             // Add the tile to the physical world
             Physics.get().add(tile);

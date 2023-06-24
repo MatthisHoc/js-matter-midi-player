@@ -9,7 +9,7 @@ var Events = Matter.Events;
  * The Physics singleton object handles the Matter engine and the world Composite
  * Any PhysicsObject must be explicitly added to the world by calling Physics.get().add()
  */
-class Physics
+export default class Physics
 {
     #engine;
     #runner;

@@ -1,6 +1,9 @@
+import Physics from '../physics-wrapper/Physics.js';
+import Animator from './Animator.js';
+
 var Bodies = Matter.Bodies;
 
-class PhysicsObject
+export class PhysicsObject
 {
     #rigidBody;
 
@@ -51,7 +54,7 @@ class PhysicsObject
 /**
  * A static PhysicsObject that holds a Note and plays it whenever it collides with a Ball
  */
-class MusicTile extends PhysicsObject
+export class MusicTile extends PhysicsObject
 {
     static NUM_TILES = 15;
     static TILE_SPACING = 5;
@@ -60,14 +63,14 @@ class MusicTile extends PhysicsObject
 
     note;
 
-    constructor(index, noteLoader)
+    constructor(index, noteLoader, canvasWidth, canvasHeight)
     {
         // Compute rectangle width based on the number of tile and their spacing
-        const tileWidth = (width / MusicTile.NUM_TILES) - MusicTile.TILE_SPACING - MusicTile.TILE_SPACING / MusicTile.NUM_TILES;
+        const tileWidth = (canvasWidth / MusicTile.NUM_TILES) - MusicTile.TILE_SPACING - MusicTile.TILE_SPACING / MusicTile.NUM_TILES;
         // Compute x position based on the provided index
         const x = tileWidth * index + MusicTile.TILE_SPACING * (index + 1) + tileWidth * 0.5;
         // Hard-coded Y value that places the tile at 90% on the bottom of the canvas
-        const y = height * 0.9;
+        const y = canvasHeight * 0.9;
         
         var options = {
             fillColor: MusicTile.defaultColor,
@@ -114,7 +117,7 @@ class MusicTile extends PhysicsObject
  * The PhysicsObject we drop on MusicTiles. It contains velocity information to determine how strongly it will hit the tiles
  * A Ball could really be any PhysicsObject as the MusicTile use collision detection to play sounds
 */
-class Ball extends PhysicsObject
+export class Ball extends PhysicsObject
 {
     noteVelocity;
 

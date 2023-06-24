@@ -1,5 +1,5 @@
 // Loads all audio in memory from the noteLabels array and create the Note objects associated
-class NoteLoader
+export class NoteLoader
 {
     #noteLabels = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5", "A5", "B5", "C6"];
     #notes = [];
@@ -51,7 +51,7 @@ class NoteLoader
 
 // Audio file wrapper that avoids having to manipulate audio files directly
 // Also contains helper functions to work with note labels
-class Note
+export class Note
 {
     label
     #audio;
